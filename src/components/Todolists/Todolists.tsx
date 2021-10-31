@@ -11,7 +11,7 @@ type PropsType = {
     changeTodolistTitle: (todolistId: string, title: string) => void
 }
 
-const Todolists = (props: PropsType) => {
+const Todolists = React.memo(function (props: PropsType) {
 
     return (
         <Space wrap align={'center'} size={'small'}>
@@ -29,6 +29,6 @@ const Todolists = (props: PropsType) => {
             }
         </Space>
     );
-};
+})
 
 export default Todolists;

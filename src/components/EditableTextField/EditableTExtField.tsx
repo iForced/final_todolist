@@ -7,7 +7,7 @@ type PropsType = {
     onValueChange: (todolistId: string, title: string) => void
 }
 
-const EditableTExtField = (props: PropsType) => {
+const EditableTExtField = React.memo(function (props: PropsType) {
 
     const [editMode, setEditMode] = useState<boolean>(false)
     const [value, setValue] = useState<string>(props.value)
@@ -38,6 +38,6 @@ const EditableTExtField = (props: PropsType) => {
             }
         </div>
     );
-};
+})
 
 export default EditableTExtField;

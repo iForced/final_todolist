@@ -6,7 +6,7 @@ type PropsType = {
     onAddItem: (title: string) => void
 }
 
-const AddItemForm = (props: PropsType) => {
+const AddItemForm = React.memo(function (props: PropsType) {
 
     const [value, setValue] = useState<string>('')
 
@@ -25,6 +25,6 @@ const AddItemForm = (props: PropsType) => {
             </div>
         </div>
     );
-};
+})
 
 export default AddItemForm;

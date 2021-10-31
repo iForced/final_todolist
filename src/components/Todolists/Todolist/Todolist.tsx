@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React from 'react';
 import s from './Todolist.module.css'
 import {TodolistType} from "../../../redux/todolist_reducer";
 import {Button, Card, Input} from "antd";
@@ -10,7 +10,7 @@ type PropsType = TodolistType & {
     changeTodolistTitle: (todolistId: string, title: string) => void
 }
 
-const Todolist = (props: PropsType) => {
+const Todolist = React.memo(function (props: PropsType) {
 
     const onDeleteTodolist = () => {
         props.deleteTodolist(props.id)
@@ -27,6 +27,6 @@ const Todolist = (props: PropsType) => {
             />}>
         </Card>
     );
-};
+})
 
 export default Todolist;

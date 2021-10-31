@@ -29,7 +29,7 @@ export const todolists_api = () => {
             return axiosInstance.delete<CommonResponseType>(`/todo-lists/${todolistId}`)
         },
         changeTodolistTitle(todolistId: string, title: string) {
-            return axiosInstance.put<CommonResponseType<{title: string}>>(`/todo-lists/${todolistId}`, {title})
+            return axiosInstance.put<CommonResponseType>(`/todo-lists/${todolistId}`, {title})
         }
     }
 }
