@@ -88,7 +88,6 @@ export const changeTodolistTitleThunk = (todolistId: string, title: string) => (
     todolists_api().changeTodolistTitle(todolistId, title)
         .then(response => response.data)
         .then(data => {
-            debugger
             data.resultCode === 0 && dispatch(changeTodolistTitle(''))
         })
 }

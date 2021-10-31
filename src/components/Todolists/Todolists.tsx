@@ -8,6 +8,8 @@ import {
 import Todolist from "./Todolist/Todolist";
 import {useDispatch} from "react-redux";
 import {store} from "../../redux/strore";
+import AddItemForm from "../AddItemForm/AddItemForm";
+import {Space} from "antd";
 
 type PropsType = {
     todolists: Array<TodolistType>
@@ -15,15 +17,10 @@ type PropsType = {
 
 const Todolists = (props: PropsType) => {
 
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
 
     return (
-        <div>
-            <button onClick={() => {
-                dispatch(createTodolistThunk('alo2'))
-                console.log(store.getState())
-            }}>add list</button>
-            <button onClick={() => dispatch(changeTodolistTitleThunk('', ''))}>delete list</button>
+        <Space wrap align={'center'} size={'small'} >
             {
                 props.todolists.map(tl =>
                     <Todolist
@@ -34,7 +31,7 @@ const Todolists = (props: PropsType) => {
                         order={tl.order}
                     />)
             }
-        </div>
+        </Space>
     );
 };
 

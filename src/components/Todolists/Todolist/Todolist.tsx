@@ -1,15 +1,14 @@
 import React from 'react';
 import {TodolistType} from "../../../redux/todolist_reducer";
+import {Card} from "antd";
 
 type PropsType = TodolistType
 
 const Todolist = (props: PropsType) => {
     return (
-        <div>
-            <div>{props.title}</div>
-            <div>{props.id}</div>
-            <div>{props.addedDate}</div>
-        </div>
+        <Card style={{minWidth: '300px'}} title={props.title}>
+
+        </Card>
     );
 };
 

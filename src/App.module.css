@@ -1,0 +1,12 @@
+.headerTitle {
+    color: white;
+}
+.main {
+    min-height: 100vh;
+}
+.sideBar {
+    padding: 30px;
+}
+.mainContent {
+    padding: 30px;
+}
