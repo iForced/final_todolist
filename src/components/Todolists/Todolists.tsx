@@ -8,6 +8,7 @@ import {Space} from "antd";
 type PropsType = {
     todolists: Array<TodolistType>
     deleteTodolist: (todolistId: string) => void
+    changeTodolistTitle: (todolistId: string, title: string) => void
 }
 
 const Todolists = (props: PropsType) => {
@@ -23,6 +24,7 @@ const Todolists = (props: PropsType) => {
                         addedDate={tl.addedDate}
                         order={tl.order}
                         deleteTodolist={props.deleteTodolist}
+                        changeTodolistTitle={props.changeTodolistTitle}
                     />)
             }
         </Space>

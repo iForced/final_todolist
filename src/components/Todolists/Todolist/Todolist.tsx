@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import s from './Todolist.module.css'
 import {TodolistType} from "../../../redux/todolist_reducer";
-import {Button, Card} from "antd";
+import {Button, Card, Input} from "antd";
 import {DeleteFilled} from "@ant-design/icons";
+import EditableTExtField from "../../EditableTextField/EditableTExtField";
 
 type PropsType = TodolistType & {
     deleteTodolist: (todolistId: string) => void
+    changeTodolistTitle: (todolistId: string, title: string) => void
 }
 
 const Todolist = (props: PropsType) => {
@@ -17,7 +19,7 @@ const Todolist = (props: PropsType) => {
     return (
         <Card
             style={{minWidth: '300px'}}
-            title={props.title}
+            title={<EditableTExtField value={props.title} id={props.id} onValueChange={props.changeTodolistTitle} />}
             extra={<Button
                 shape={'circle'}
                 icon={<DeleteFilled style={{color: 'red'}}/>}

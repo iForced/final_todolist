@@ -15,7 +15,11 @@ export type TodolistType = {
     title: string
 }
 type InitialStateType = Array<TodolistType>
-type ActionsType = ReturnType<typeof setTodolists> | ReturnType<typeof addTodolist> | ReturnType<typeof deleteTodolist> | ReturnType<typeof changeTodolistTitle>
+type ActionsType =
+    ReturnType<typeof setTodolists>
+    | ReturnType<typeof addTodolist>
+    | ReturnType<typeof deleteTodolist>
+    | ReturnType<typeof changeTodolistTitle>
 
 const initialState: InitialStateType = []
 
@@ -23,42 +27,45 @@ export const todolist_reducer = (state: InitialStateType = initialState, action:
     switch (action.type) {
 
         case TodolistActions.SET_TODOLISTS:
-            return [...state, ...action.payload]
+            return [...state, ...action.todolists]
 
         case TodolistActions.ADD_TODOLIST:
-            return [...state, action.payload]
+            return [...state, action.todolist]
 
         case TodolistActions.DELETE_TODOLIST:
-            return state.filter(tl => tl.id !== action.payload)
+            return state.filter(tl => tl.id !== action.todolistId)
+
+        case TodolistActions.CHANGE_TODOLIST_TITLE:
+            return state.map(tl => tl.id === action.todolistId ? {...tl, title: action.newTitle} : tl)
 
         default:
             return state
     }
 }
 
-export const setTodolists = (payload: Array<TodolistType>) => {
+export const setTodolists = (todolists: Array<TodolistType>) => {
     return {
         type: TodolistActions.SET_TODOLISTS,
-        payload,
+        todolists,
     } as const
 }
-export const addTodolist = (payload: TodolistType) => {
+export const addTodolist = (todolist: TodolistType) => {
     return {
         type: TodolistActions.ADD_TODOLIST,
-        payload,
+        todolist,
     } as const
 }
-export const deleteTodolist = (payload: string) => {
+export const deleteTodolist = (todolistId: string) => {
     return {
         type: TodolistActions.DELETE_TODOLIST,
-        payload,
+        todolistId,
     } as const
 }
-//TODO разобраться с параметрами (пэйлоад)
-export const changeTodolistTitle = (payload: string) => {
+export const changeTodolistTitle = (todolistId: string, newTitle: string) => {
     return {
         type: TodolistActions.CHANGE_TODOLIST_TITLE,
-        payload,
+        todolistId,
+        newTitle,
     } as const
 }
 export const getTodolistsThunk = () => (dispatch: Dispatch) => {
@@ -82,11 +89,10 @@ export const deleteTodolistThunk = (todolistId: string) => (dispatch: Dispatch) 
             data.resultCode === 0 && dispatch(deleteTodolist(todolistId))
         })
 }
-//TODO разобраться с параметрами (тайтл)
 export const changeTodolistTitleThunk = (todolistId: string, title: string) => (dispatch: Dispatch) => {
     todolists_api().changeTodolistTitle(todolistId, title)
         .then(response => response.data)
         .then(data => {
-            data.resultCode === 0 && dispatch(changeTodolistTitle(''))
+            data.resultCode === 0 && dispatch(changeTodolistTitle(todolistId, title))
         })
 }
