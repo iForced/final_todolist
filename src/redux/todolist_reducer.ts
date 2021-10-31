@@ -43,7 +43,6 @@ export const setTodolists = (payload: Array<TodolistType>) => {
     } as const
 }
 export const addTodolist = (payload: TodolistType) => {
-    debugger
     return {
         type: TodolistActions.ADD_TODOLIST,
         payload,

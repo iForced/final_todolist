@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react';
 import 'antd/dist/antd.css';
 import s from './App.module.css'
 import Todolists from "./components/Todolists/Todolists";
-import {createTodolistThunk, getTodolistsThunk, TodolistType} from "./redux/todolist_reducer";
+import {createTodolistThunk, deleteTodolistThunk, getTodolistsThunk, TodolistType} from "./redux/todolist_reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "./redux/strore";
 import {Layout} from "antd";
@@ -22,6 +22,9 @@ const App = () => {
     const onTodolistAdd = useCallback((title: string) => {
         dispatch(createTodolistThunk(title))
     }, [dispatch])
+    const onDeleteTodolist = useCallback((todolistId: string) => {
+        dispatch(deleteTodolistThunk(todolistId))
+    }, [dispatch])
 
     return (
 
@@ -36,6 +39,7 @@ const App = () => {
                 <Content className={s.mainContent}>
                     <Todolists
                         todolists={todolists}
+                        deleteTodolist={onDeleteTodolist}
                     />
                 </Content>
             </Layout>
