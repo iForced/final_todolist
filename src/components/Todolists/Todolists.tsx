@@ -1,30 +1,42 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
+    changeTodolistTitleThunk,
+    deleteTodolistThunk,
+    getTodolistsThunk,
     TodolistType
 } from "../../redux/todolist_reducer";
 import Todolist from "./Todolist/Todolist";
 import {Space} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {AppStateType} from "../../redux/strore";
 
-type PropsType = {
-    todolists: Array<TodolistType>
-    deleteTodolist: (todolistId: string) => void
-    changeTodolistTitle: (todolistId: string, title: string) => void
-}
+const Todolists = React.memo(function () {
 
-const Todolists = React.memo(function (props: PropsType) {
+    const dispatch = useDispatch()
+    const todolists = useSelector<AppStateType, Array<TodolistType>>(state => state.todolistReducer)
+
+    useEffect(() => {
+        dispatch(getTodolistsThunk())
+    }, [dispatch])
+    const onDeleteTodolist = useCallback((todolistId: string) => {
+        dispatch(deleteTodolistThunk(todolistId))
+    }, [dispatch])
+    const onChangeTodolistTitle = useCallback((todolistId: string, title: string) => {
+        dispatch(changeTodolistTitleThunk(todolistId, title))
+    }, [dispatch])
 
     return (
         <Space wrap align={'center'} size={'small'}>
             {
-                props.todolists.map(tl =>
+                todolists.map(tl =>
                     <Todolist
                         key={tl.id}
                         id={tl.id}
                         title={tl.title}
                         addedDate={tl.addedDate}
                         order={tl.order}
-                        deleteTodolist={props.deleteTodolist}
-                        changeTodolistTitle={props.changeTodolistTitle}
+                        deleteTodolist={onDeleteTodolist}
+                        changeTodolistTitle={onChangeTodolistTitle}
                     />)
             }
         </Space>
