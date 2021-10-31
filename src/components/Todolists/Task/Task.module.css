@@ -1,0 +1,9 @@
+.taskItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: cornflowerblue;
+    margin: 10px 0;
+    padding: 7px 15px;
+    border-radius: 5px;
+}

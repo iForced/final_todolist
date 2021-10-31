@@ -2,3 +2,6 @@
     fill: red;
     cursor: pointer;
 }
+.todolists {
+    min-height: 400px;
+}
