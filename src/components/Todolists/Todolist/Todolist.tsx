@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './Todolist.module.css'
 import {TodolistType} from "../../../redux/todolist_reducer";
-import {Button, Card, Input} from "antd";
+import {Button, Card} from "antd";
 import {DeleteFilled} from "@ant-design/icons";
 import EditableTExtField from "../../EditableTextField/EditableTExtField";
 
