@@ -11,7 +11,7 @@ const App = () => {
 
     useEffect(() => {
         dispatch(getTodolistsThunk())
-    }, [dispatch])
+    }, [])
 
     return (
         <div>

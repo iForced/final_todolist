@@ -24,6 +24,12 @@ export const todolists_api = () => {
         },
         createTodolist(title: string) {
             return axiosInstance.post<CommonResponseType<{item: TodolistType}>>('/todo-lists', {title})
+        },
+        deleteTodolist(todolistId: string) {
+            return axiosInstance.delete<CommonResponseType>(`/todo-lists/${todolistId}`)
+        },
+        changeTodolistTitle(todolistId: string, title: string) {
+            return axiosInstance.put<CommonResponseType>(`/todo-lists/${todolistId}`, {title})
         }
     }
 }
