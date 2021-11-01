@@ -14,6 +14,7 @@ import {
 import {useDispatch} from "react-redux";
 import AddItemForm from "../../AddItemForm/AddItemForm";
 import Task from "../Task/Task";
+import {TaskStatuses} from "../../../api/tasks_api";
 
 type PropsType = TodolistType & {
     deleteTodolist: (todolistId: string) => void
@@ -41,6 +42,9 @@ const Todolist = React.memo(function (props: PropsType) {
     const onChangeTaskTitle = useCallback((taskId: string, newTitle: string) => {
         dispatch(updateTaskThunk(props.id, taskId, {title: newTitle}))
     }, [dispatch])
+    const onChangeTaskStatus = useCallback((taskId: string, newStatus: TaskStatuses) => {
+        dispatch(updateTaskThunk(props.id, taskId, {status: newStatus}))
+    }, [dispatch])
 
     return (
         <Card
@@ -55,7 +59,14 @@ const Todolist = React.memo(function (props: PropsType) {
             <AddItemForm onAddItem={onAddTask}/>
             <div className={s.tasks}>
                 {
-                    props.tasks.map(t => <Task key={t.id} taskData={t} deleteTask={onDeleteTask} changeTitle={onChangeTaskTitle} />)
+                    props.tasks.map(t =>
+                        <Task
+                            key={t.id}
+                            taskData={t}
+                            deleteTask={onDeleteTask}
+                            changeTitle={onChangeTaskTitle}
+                            changeStatus={onChangeTaskStatus}
+                        />)
                 }
             </div>
         </Card>
