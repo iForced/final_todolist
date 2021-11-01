@@ -54,8 +54,8 @@ export const tasks_api = () => {
         deleteTask(todolistId: string, taskId: string) {
             return axiosInstance.delete<CommonResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`)
         },
-        changeTaskTitle(todolistId: string, taskId: string, taskData: DataForUpdateTaskType) {
+        updateTask(todolistId: string, taskId: string, taskData: DataForUpdateTaskType) {
             return axiosInstance.put<CommonResponseType<{item: TaskType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, {...taskData})
-        }
+        },
     }
 }

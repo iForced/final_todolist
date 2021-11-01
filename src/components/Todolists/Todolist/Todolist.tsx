@@ -5,7 +5,7 @@ import {Button, Card} from "antd";
 import {DeleteFilled} from "@ant-design/icons";
 import EditableTExtField from "../../EditableTextField/EditableTExtField";
 import {
-    changeTaskTitleThunk,
+    updateTaskThunk,
     createTaskThunk,
     deleteTaskThunk,
     getTasksThunk,
@@ -39,7 +39,7 @@ const Todolist = React.memo(function (props: PropsType) {
         dispatch(deleteTaskThunk(props.id, taskId))
     }, [dispatch])
     const onChangeTaskTitle = useCallback((taskId: string, newTitle: string) => {
-        dispatch(changeTaskTitleThunk(props.id, taskId, newTitle))
+        dispatch(updateTaskThunk(props.id, taskId, {title: newTitle}))
     }, [dispatch])
 
     return (

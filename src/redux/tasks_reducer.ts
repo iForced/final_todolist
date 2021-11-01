@@ -6,7 +6,7 @@ enum TodolistActions {
     SET_TASKS = 'SET_TASKS',
     ADD_TASK = 'ADD_TASK',
     DELETE_TASK = 'DELETE_TASK',
-    CHANGE_TASK_TITLE = 'CHANGE_TASK_TITLE',
+    UPDATE_TASK = 'UPDATE_TASK',
 }
 export type TaskType = {
     description: string
@@ -27,7 +27,7 @@ type ActionsType =
     ReturnType<typeof setTasks>
     | ReturnType<typeof addTask>
     | ReturnType<typeof deleteTask>
-    | ReturnType<typeof changeTaskTitle>
+    | ReturnType<typeof updateTask>
 
 const initialState: InitialStateType = []
 
@@ -43,8 +43,8 @@ export const tasks_reducer = (state: InitialStateType = initialState, action: Ac
         case TodolistActions.DELETE_TASK:
             return state.filter(t => t.id !== action.taskId)
 
-        case TodolistActions.CHANGE_TASK_TITLE:
-            return state.map(t => t.todoListId === action.todolistId && t.id === action.taskId ? {...t, title: action.newTitle} : t)
+        case TodolistActions.UPDATE_TASK:
+            return state.map(t => t.todoListId === action.todolistId && t.id === action.taskId ? {...t, ...action.taskData} : t)
 
         default:
             return state
@@ -72,12 +72,12 @@ export const deleteTask = (todolistId: string, taskId: string) => {
         taskId,
     } as const
 }
-export const changeTaskTitle = (todolistId: string, taskId: string, newTitle: string) => {
+export const updateTask = (todolistId: string, taskId: string, taskData: DataForUpdateTaskType) => {
     return {
-        type: TodolistActions.CHANGE_TASK_TITLE,
+        type: TodolistActions.UPDATE_TASK,
         todolistId,
         taskId,
-        newTitle,
+        taskData,
     } as const
 }
 export const getTasksThunk = (todolistId: string) => (dispatch: Dispatch) => {
@@ -101,20 +101,29 @@ export const deleteTaskThunk = (todolistId: string, taskId: string) => (dispatch
             data.resultCode === 0 && dispatch(deleteTask(todolistId, taskId))
         })
 }
-export const changeTaskTitleThunk = (todolistId: string, taskId: string, newTitle: string) => (dispatch: Dispatch, getState: () => AppStateType) => {
+export type DataForUpdateDomainTaskType = {
+    title?: string
+    description?: string
+    completed?: boolean
+    status?: TaskStatuses
+    priority?: TaskPriorities
+    startDate?: string
+    deadline?: string
+}
+export const updateTaskThunk = (todolistId: string, taskId: string, taskData: DataForUpdateDomainTaskType) => (dispatch: Dispatch, getState: () => AppStateType) => {
 
     const task = getState().tasksReducer.find(t => t.todoListId === todolistId && t.id === taskId)
 
     if (!task) return
 
     const updatedTask: DataForUpdateTaskType = {
-        ...task, title: newTitle
+        ...task, ...taskData
     }
-    tasks_api().changeTaskTitle(todolistId, taskId, updatedTask)
+    tasks_api().updateTask(todolistId, taskId, updatedTask)
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(changeTaskTitle(todolistId, taskId, data.data.item.title))
+                dispatch(updateTask(todolistId, taskId, data.data.item))
             }
         })
 }
