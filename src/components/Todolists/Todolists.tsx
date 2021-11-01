@@ -39,6 +39,7 @@ const Todolists = React.memo(function () {
                         title={tl.title}
                         addedDate={tl.addedDate}
                         order={tl.order}
+                        filter={tl.filter || 'all'}
                         deleteTodolist={onDeleteTodolist}
                         changeTodolistTitle={onChangeTodolistTitle}
                         tasks={tasks.filter(t => t.todoListId === tl.id)}

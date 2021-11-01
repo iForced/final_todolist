@@ -6,13 +6,15 @@ enum TodolistActions {
     ADD_TODOLIST = 'ADD_TODOLIST',
     DELETE_TODOLIST = 'DELETE_TODOLIST',
     CHANGE_TODOLIST_TITLE = 'CHANGE_TODOLIST_TITLE',
+    CHANGE_TODOLIST_FILTER = 'CHANGE_TODOLIST_FILTER',
 }
-
+export type FilterValuesType = 'all' | 'active' | 'completed'
 export type TodolistType = {
     id: string
     addedDate: string
     order: number
     title: string
+    filter: FilterValuesType
 }
 type InitialStateType = Array<TodolistType>
 type ActionsType =
@@ -20,6 +22,7 @@ type ActionsType =
     | ReturnType<typeof addTodolist>
     | ReturnType<typeof deleteTodolist>
     | ReturnType<typeof changeTodolistTitle>
+    | ReturnType<typeof changeTodolistFilter>
 
 const initialState: InitialStateType = []
 
@@ -37,6 +40,9 @@ export const todolist_reducer = (state: InitialStateType = initialState, action:
 
         case TodolistActions.CHANGE_TODOLIST_TITLE:
             return state.map(tl => tl.id === action.todolistId ? {...tl, title: action.newTitle} : tl)
+
+        case TodolistActions.CHANGE_TODOLIST_FILTER:
+            return state.map(tl => tl.id === action.todolistId ? {...tl, filter: action.newFilter} : tl)
 
         default:
             return state
@@ -66,6 +72,13 @@ export const changeTodolistTitle = (todolistId: string, newTitle: string) => {
         type: TodolistActions.CHANGE_TODOLIST_TITLE,
         todolistId,
         newTitle,
+    } as const
+}
+export const changeTodolistFilter = (todolistId: string, newFilter: FilterValuesType) => {
+    return {
+        type: TodolistActions.CHANGE_TODOLIST_FILTER,
+        todolistId,
+        newFilter,
     } as const
 }
 export const getTodolistsThunk = () => (dispatch: Dispatch) => {

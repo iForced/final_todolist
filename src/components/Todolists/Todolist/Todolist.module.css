@@ -5,3 +5,10 @@
 .todolists {
     min-height: 400px;
 }
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+.buttons.hideButtons {
+    display: none;
+}

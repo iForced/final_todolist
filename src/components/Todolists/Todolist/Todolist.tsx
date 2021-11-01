@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import s from './Todolist.module.css'
-import {TodolistType} from "../../../redux/todolist_reducer";
+import {changeTodolistFilter, FilterValuesType, TodolistType} from "../../../redux/todolist_reducer";
 import {Button, Card} from "antd";
 import {DeleteFilled} from "@ant-design/icons";
 import EditableTExtField from "../../EditableTextField/EditableTExtField";
@@ -15,6 +15,7 @@ import {useDispatch} from "react-redux";
 import AddItemForm from "../../AddItemForm/AddItemForm";
 import Task from "../Task/Task";
 import {TaskStatuses} from "../../../api/tasks_api";
+import MyButton from "../../MyButton/MyButton";
 
 type PropsType = TodolistType & {
     deleteTodolist: (todolistId: string) => void
@@ -33,9 +34,12 @@ const Todolist = React.memo(function (props: PropsType) {
     const onDeleteTodolist = useCallback(() => {
         props.deleteTodolist(props.id)
     }, [dispatch])
+    const onChangeTodolistFilter = useCallback((newFilter: FilterValuesType) => {
+        dispatch(changeTodolistFilter(props.id, newFilter))
+    }, [dispatch])
     const onAddTask = useCallback((title: string) => {
         dispatch(createTaskThunk(props.id, title))
-    },[dispatch])
+    }, [dispatch])
     const onDeleteTask = useCallback((taskId: string) => {
         dispatch(deleteTaskThunk(props.id, taskId))
     }, [dispatch])
@@ -45,6 +49,20 @@ const Todolist = React.memo(function (props: PropsType) {
     const onChangeTaskStatus = useCallback((taskId: string, newStatus: TaskStatuses) => {
         dispatch(updateTaskThunk(props.id, taskId, {status: newStatus}))
     }, [dispatch])
+
+    const tasksByFilterValue = props.tasks.filter(t => {
+        switch (props.filter) {
+
+            case "active":
+                return t.status === 0
+
+            case "completed":
+                return t.status === 2
+
+            default:
+                return t
+        }
+    })
 
     return (
         <Card
@@ -59,7 +77,7 @@ const Todolist = React.memo(function (props: PropsType) {
             <AddItemForm onAddItem={onAddTask}/>
             <div className={s.tasks}>
                 {
-                    props.tasks.map(t =>
+                    tasksByFilterValue.map(t =>
                         <Task
                             key={t.id}
                             taskData={t}
@@ -68,6 +86,11 @@ const Todolist = React.memo(function (props: PropsType) {
                             changeStatus={onChangeTaskStatus}
                         />)
                 }
+            </div>
+            <div className={s.buttons + ' ' + (!props.tasks.length && s.hideButtons)}>
+                <MyButton name={'all'} filterValue={props.filter} changeFilter={onChangeTodolistFilter} />
+                <MyButton name={'active'} filterValue={props.filter} changeFilter={onChangeTodolistFilter} />
+                <MyButton name={'completed'} filterValue={props.filter} changeFilter={onChangeTodolistFilter} />
             </div>
         </Card>
     );
