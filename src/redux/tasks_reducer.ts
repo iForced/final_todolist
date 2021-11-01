@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
-import {todolists_api} from "../api/todolists_api";
-import {tasks_api, UpdateTaskDataType} from "../api/tasks_api";
+import {tasks_api, DataForUpdateTaskType, TaskStatuses, TaskPriorities} from "../api/tasks_api";
+import {AppStateType} from "./strore";
 
 enum TodolistActions {
     SET_TASKS = 'SET_TASKS',
@@ -12,8 +12,8 @@ export type TaskType = {
     description: string
     title: string
     completed: boolean
-    status: number
-    priority: number
+    status: TaskStatuses
+    priority: TaskPriorities
     startDate: string
     deadline: string
     id: string
@@ -44,7 +44,7 @@ export const tasks_reducer = (state: InitialStateType = initialState, action: Ac
             return state.filter(t => t.id !== action.taskId)
 
         case TodolistActions.CHANGE_TASK_TITLE:
-            return state.map(t => t.id === action.taskId ? {...t, title: action.newTitle} : t)
+            return state.map(t => t.todoListId === action.todolistId && t.id === action.taskId ? {...t, title: action.newTitle} : t)
 
         default:
             return state
@@ -101,10 +101,20 @@ export const deleteTaskThunk = (todolistId: string, taskId: string) => (dispatch
             data.resultCode === 0 && dispatch(deleteTask(todolistId, taskId))
         })
 }
-export const changeTaskTitleThunk = (todolistId: string, taskId: string, taskData: UpdateTaskDataType) => (dispatch: Dispatch) => {
-    tasks_api().changeTaskTitle(todolistId, taskId, taskData)
+export const changeTaskTitleThunk = (todolistId: string, taskId: string, newTitle: string) => (dispatch: Dispatch, getState: () => AppStateType) => {
+
+    const task = getState().tasksReducer.find(t => t.todoListId === todolistId && t.id === taskId)
+
+    if (!task) return
+
+    const updatedTask: DataForUpdateTaskType = {
+        ...task, title: newTitle
+    }
+    tasks_api().changeTaskTitle(todolistId, taskId, updatedTask)
         .then(response => response.data)
         .then(data => {
-            data.resultCode === 0 && dispatch(changeTaskTitle(todolistId, taskId, taskData.title))
+            if (data.resultCode === 0) {
+                dispatch(changeTaskTitle(todolistId, taskId, data.data.item.title))
+            }
         })
 }

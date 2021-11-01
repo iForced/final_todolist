@@ -4,7 +4,13 @@ import {TodolistType} from "../../../redux/todolist_reducer";
 import {Button, Card} from "antd";
 import {DeleteFilled} from "@ant-design/icons";
 import EditableTExtField from "../../EditableTextField/EditableTExtField";
-import {createTaskThunk, deleteTaskThunk, getTasksThunk, TaskType} from "../../../redux/tasks_reducer";
+import {
+    changeTaskTitleThunk,
+    createTaskThunk,
+    deleteTaskThunk,
+    getTasksThunk,
+    TaskType
+} from "../../../redux/tasks_reducer";
 import {useDispatch} from "react-redux";
 import AddItemForm from "../../AddItemForm/AddItemForm";
 import Task from "../Task/Task";
@@ -32,6 +38,9 @@ const Todolist = React.memo(function (props: PropsType) {
     const onDeleteTask = useCallback((taskId: string) => {
         dispatch(deleteTaskThunk(props.id, taskId))
     }, [dispatch])
+    const onChangeTaskTitle = useCallback((taskId: string, newTitle: string) => {
+        dispatch(changeTaskTitleThunk(props.id, taskId, newTitle))
+    }, [dispatch])
 
     return (
         <Card
@@ -46,7 +55,7 @@ const Todolist = React.memo(function (props: PropsType) {
             <AddItemForm onAddItem={onAddTask}/>
             <div className={s.tasks}>
                 {
-                    props.tasks.map(t => <Task key={t.id} taskData={t} deleteTask={onDeleteTask} />)
+                    props.tasks.map(t => <Task key={t.id} taskData={t} deleteTask={onDeleteTask} changeTitle={onChangeTaskTitle} />)
                 }
             </div>
         </Card>
