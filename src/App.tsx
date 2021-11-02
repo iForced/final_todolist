@@ -6,7 +6,7 @@ import {
     createTodolistThunk,
 } from "./redux/todolist_reducer";
 import {useDispatch} from "react-redux";
-import {Layout} from "antd";
+import {Layout, Progress} from "antd";
 import AddItemForm from "./components/AddItemForm/AddItemForm";
 
 const {Header, Footer, Sider, Content} = Layout;
@@ -25,6 +25,7 @@ const App = () => {
             <Header>
                 <h1 className={s.headerTitle}>Todo List</h1>
             </Header>
+            <Progress percent={100} />
             <Layout className={s.main}>
                 <Sider theme={'light'} className={s.sideBar} width={'300px'}>
                     <AddItemForm onAddItem={onTodolistAdd}/>
