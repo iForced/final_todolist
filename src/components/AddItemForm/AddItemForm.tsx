@@ -4,6 +4,7 @@ import {Button, Input} from "antd";
 
 type PropsType = {
     onAddItem: (title: string) => void
+    formDisabled: boolean
 }
 
 const AddItemForm = React.memo(function (props: PropsType) {
@@ -27,8 +28,14 @@ const AddItemForm = React.memo(function (props: PropsType) {
     return (
         <div>
             <div className={s.addForm + ' ' + (error && s.errorForm)}>
-                <Input placeholder={'Enter title'} value={value} onChange={onInputChange} onPressEnter={onAdd} />
-                <Button type={'primary'} onClick={onAdd}>Add</Button>
+                <Input
+                    placeholder={'Enter title'}
+                    value={value}
+                    onChange={onInputChange}
+                    onPressEnter={onAdd}
+                    disabled={props.formDisabled}
+                />
+                <Button type={'primary'} onClick={onAdd} disabled={props.formDisabled}>Add</Button>
             </div>
             <div className={s.error}>
                 {error ? error : ''}

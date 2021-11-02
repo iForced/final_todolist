@@ -1,5 +1,6 @@
 import {Dispatch} from "redux";
 import {todolists_api} from "../api/todolists_api";
+import {setLoadingStatus} from "./app_reducer";
 
 enum TodolistActions {
     SET_TODOLISTS = 'SET_TODOLISTS',
@@ -89,23 +90,35 @@ export const getTodolistsThunk = () => (dispatch: Dispatch) => {
         })
 }
 export const createTodolistThunk = (title: string) => (dispatch: Dispatch) => {
+    dispatch(setLoadingStatus('loading'))
     todolists_api().createTodolist(title)
         .then(response => response.data)
         .then(data => {
-            data.resultCode === 0 && dispatch(addTodolist(data.data.item))
+            if (data.resultCode === 0) {
+                dispatch(setLoadingStatus('success'))
+                dispatch(addTodolist(data.data.item))
+            }
         })
 }
 export const deleteTodolistThunk = (todolistId: string) => (dispatch: Dispatch) => {
+    dispatch(setLoadingStatus('loading'))
     todolists_api().deleteTodolist(todolistId)
         .then(response => response.data)
         .then(data => {
-            data.resultCode === 0 && dispatch(deleteTodolist(todolistId))
+            if (data.resultCode === 0) {
+                dispatch(setLoadingStatus('success'))
+                dispatch(deleteTodolist(todolistId))
+            }
         })
 }
 export const changeTodolistTitleThunk = (todolistId: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(setLoadingStatus('loading'))
     todolists_api().changeTodolistTitle(todolistId, title)
         .then(response => response.data)
         .then(data => {
-            data.resultCode === 0 && dispatch(changeTodolistTitle(todolistId, title))
+            if (data.resultCode === 0) {
+                dispatch(setLoadingStatus('success'))
+                dispatch(changeTodolistTitle(todolistId, title))
+            }
         })
 }
