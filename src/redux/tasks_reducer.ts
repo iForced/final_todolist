@@ -2,6 +2,7 @@ import {Dispatch} from "redux";
 import {tasks_api, DataForUpdateTaskType, TaskStatuses, TaskPriorities} from "../api/tasks_api";
 import {AppStateType} from "./strore";
 import {setTodolistLoadingStatus} from "./todolist_reducer";
+import {setAppError} from "./app_reducer";
 
 enum TodolistActions {
     SET_TASKS = 'TASK/SET_TASKS',
@@ -52,6 +53,15 @@ export const tasks_reducer = (state: InitialStateType = initialState, action: Ac
     }
 }
 
+const onSuccessTasksRequest = (dispatch: Dispatch, todolistId: string) => {
+    dispatch(setAppError(''))
+    dispatch(setTodolistLoadingStatus(todolistId, 'success'))
+}
+const onFailedTasksRequest = (dispatch: Dispatch, todolistId: string, error: string) => {
+    dispatch(setAppError(error))
+    dispatch(setTodolistLoadingStatus(todolistId, 'fail'))
+}
+
 export const setTasks = (todolistId: string, tasks: Array<TaskType>) => {
     return {
         type: TodolistActions.SET_TASKS,
@@ -94,8 +104,10 @@ export const createTaskThunk = (todolistId: string, title: string) => (dispatch:
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setTodolistLoadingStatus(todolistId, 'success'))
+                onSuccessTasksRequest(dispatch, todolistId)
                 dispatch(addTask(todolistId, data.data.item))
+            } else {
+                onFailedTasksRequest(dispatch, todolistId, data.messages.join(','))
             }
         })
 }
@@ -105,8 +117,10 @@ export const deleteTaskThunk = (todolistId: string, taskId: string) => (dispatch
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setTodolistLoadingStatus(todolistId, 'success'))
+                onSuccessTasksRequest(dispatch, todolistId)
                 dispatch(deleteTask(todolistId, taskId))
+            } else {
+                onFailedTasksRequest(dispatch, todolistId, data.messages.join(','))
             }
         })
 }
@@ -133,8 +147,10 @@ export const updateTaskThunk = (todolistId: string, taskId: string, taskData: Da
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setTodolistLoadingStatus(todolistId, 'success'))
+                onSuccessTasksRequest(dispatch, todolistId)
                 dispatch(updateTask(todolistId, taskId, data.data.item))
+            } else {
+                onFailedTasksRequest(dispatch, todolistId, data.messages.join(','))
             }
         })
 }

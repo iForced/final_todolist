@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
 import {todolists_api} from "../api/todolists_api";
-import {LoadingStatusesType, setAppLoadingStatus} from "./app_reducer";
+import {LoadingStatusesType, setAppError, setAppLoadingStatus} from "./app_reducer";
 
 enum TodolistActions {
     SET_TODOLISTS = 'TODOLIST/SET_TODOLISTS',
@@ -108,8 +108,12 @@ export const createTodolistThunk = (title: string) => (dispatch: Dispatch) => {
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
+                dispatch(setAppError(''))
                 dispatch(setAppLoadingStatus('success'))
                 dispatch(addTodolist(data.data.item))
+            } else {
+                dispatch(setAppError(data.messages.join(',')))
+                dispatch(setAppLoadingStatus('fail'))
             }
         })
 }
@@ -119,8 +123,12 @@ export const deleteTodolistThunk = (todolistId: string) => (dispatch: Dispatch) 
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
+                dispatch(setAppError(''))
                 dispatch(setAppLoadingStatus('success'))
                 dispatch(deleteTodolist(todolistId))
+            } else {
+                dispatch(setAppError(data.messages.join(',')))
+                dispatch(setAppLoadingStatus('fail'))
             }
         })
 }
@@ -130,8 +138,12 @@ export const changeTodolistTitleThunk = (todolistId: string, title: string) => (
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
+                dispatch(setAppError(''))
                 dispatch(setAppLoadingStatus('success'))
                 dispatch(changeTodolistTitle(todolistId, title))
+            } else {
+                dispatch(setAppError(data.messages.join(',')))
+                dispatch(setAppLoadingStatus('fail'))
             }
         })
 }

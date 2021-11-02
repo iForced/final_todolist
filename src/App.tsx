@@ -6,7 +6,7 @@ import {
     createTodolistThunk,
 } from "./redux/todolist_reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {Layout, Spin} from "antd";
+import {Alert, Layout, Spin} from "antd";
 import AddItemForm from "./components/AddItemForm/AddItemForm";
 import {AppStateType} from "./redux/strore";
 import {LoadingStatusesType} from "./redux/app_reducer";
@@ -18,6 +18,7 @@ const App = () => {
     const dispatch = useDispatch()
 
     const appLoadingStatus = useSelector<AppStateType, LoadingStatusesType>(state => state.appReducer.loadingStatus)
+    const appError = useSelector<AppStateType, string>(state => state.appReducer.error)
 
     const onTodolistAdd = useCallback((title: string) => {
         dispatch(createTodolistThunk(title))
@@ -29,6 +30,12 @@ const App = () => {
             <Header>
                 <h1 className={s.headerTitle}>Todo List</h1>
             </Header>
+            {appError && <Alert
+                message={appError}
+                type="error"
+                showIcon
+                closable
+            />}
             <Spin spinning={appLoadingStatus === 'loading'}>
                 <Layout className={s.main}>
                     <Sider theme={'light'} className={s.sideBar} width={'300px'}>

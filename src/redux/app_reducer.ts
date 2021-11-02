@@ -3,7 +3,7 @@ type InitialStateType = {
     loadingStatus: LoadingStatusesType
     error: string
 }
-type ActionsType = ReturnType<typeof setAppLoadingStatus> | ReturnType<typeof setError>
+type ActionsType = ReturnType<typeof setAppLoadingStatus> | ReturnType<typeof setAppError>
 enum AppActions {
     SET_LOADING_STATUS = 'APP/SET_LOADING_STATUS',
     SET_ERROR = 'APP/SET_ERROR',
@@ -33,7 +33,7 @@ export const setAppLoadingStatus = (newStatus: LoadingStatusesType) => {
         newStatus,
     } as const
 }
-export const setError = (error: string) => {
+export const setAppError = (error: string) => {
     return {
         type: AppActions.SET_ERROR,
         error,
