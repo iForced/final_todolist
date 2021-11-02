@@ -74,7 +74,7 @@ const Todolist = React.memo(function (props: PropsType) {
                 icon={<DeleteFilled style={{color: 'red'}}/>}
                 onClick={onDeleteTodolist}
             />}>
-            <AddItemForm onAddItem={onAddTask} formDisabled={false}/>
+            <AddItemForm onAddItem={onAddTask} formDisabled={props.loadingStatus === 'loading'}/>
             <div className={s.tasks}>
                 {
                     tasksByFilterValue.map(t =>

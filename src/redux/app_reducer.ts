@@ -3,10 +3,10 @@ type InitialStateType = {
     loadingStatus: LoadingStatusesType
     error: string
 }
-type ActionsType = ReturnType<typeof setLoadingStatus> | ReturnType<typeof setError>
+type ActionsType = ReturnType<typeof setAppLoadingStatus> | ReturnType<typeof setError>
 enum AppActions {
-    SET_LOADING_STATUS = 'SET_LOADING_STATUS',
-    SET_ERROR = 'SET_ERROR',
+    SET_LOADING_STATUS = 'APP/SET_LOADING_STATUS',
+    SET_ERROR = 'APP/SET_ERROR',
 }
 const initialState: InitialStateType = {
     loadingStatus: 'idle',
@@ -27,7 +27,7 @@ export const app_reducer = (state: InitialStateType = initialState, action: Acti
     }
 }
 
-export const setLoadingStatus = (newStatus: LoadingStatusesType) => {
+export const setAppLoadingStatus = (newStatus: LoadingStatusesType) => {
     return {
         type: AppActions.SET_LOADING_STATUS,
         newStatus,

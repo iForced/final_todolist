@@ -1,12 +1,13 @@
 import {Dispatch} from "redux";
 import {tasks_api, DataForUpdateTaskType, TaskStatuses, TaskPriorities} from "../api/tasks_api";
 import {AppStateType} from "./strore";
+import {setTodolistLoadingStatus} from "./todolist_reducer";
 
 enum TodolistActions {
-    SET_TASKS = 'SET_TASKS',
-    ADD_TASK = 'ADD_TASK',
-    DELETE_TASK = 'DELETE_TASK',
-    UPDATE_TASK = 'UPDATE_TASK',
+    SET_TASKS = 'TASK/SET_TASKS',
+    ADD_TASK = 'TASK/ADD_TASK',
+    DELETE_TASK = 'TASK/DELETE_TASK',
+    UPDATE_TASK = 'TASK/UPDATE_TASK',
 }
 export type TaskType = {
     description: string
@@ -88,17 +89,25 @@ export const getTasksThunk = (todolistId: string) => (dispatch: Dispatch) => {
         })
 }
 export const createTaskThunk = (todolistId: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(setTodolistLoadingStatus(todolistId, 'loading'))
     tasks_api().createTask(todolistId, title)
         .then(response => response.data)
         .then(data => {
-            data.resultCode === 0 && dispatch(addTask(todolistId, data.data.item))
+            if (data.resultCode === 0) {
+                dispatch(setTodolistLoadingStatus(todolistId, 'success'))
+                dispatch(addTask(todolistId, data.data.item))
+            }
         })
 }
 export const deleteTaskThunk = (todolistId: string, taskId: string) => (dispatch: Dispatch) => {
+    dispatch(setTodolistLoadingStatus(todolistId, 'loading'))
     tasks_api().deleteTask(todolistId, taskId)
         .then(response => response.data)
         .then(data => {
-            data.resultCode === 0 && dispatch(deleteTask(todolistId, taskId))
+            if (data.resultCode === 0) {
+                dispatch(setTodolistLoadingStatus(todolistId, 'success'))
+                dispatch(deleteTask(todolistId, taskId))
+            }
         })
 }
 export type DataForUpdateDomainTaskType = {
@@ -119,10 +128,12 @@ export const updateTaskThunk = (todolistId: string, taskId: string, taskData: Da
     const updatedTask: DataForUpdateTaskType = {
         ...task, ...taskData
     }
+    dispatch(setTodolistLoadingStatus(todolistId, 'loading'))
     tasks_api().updateTask(todolistId, taskId, updatedTask)
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
+                dispatch(setTodolistLoadingStatus(todolistId, 'success'))
                 dispatch(updateTask(todolistId, taskId, data.data.item))
             }
         })

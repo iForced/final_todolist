@@ -7,7 +7,7 @@ import {
     TodolistType
 } from "../../redux/todolist_reducer";
 import Todolist from "./Todolist/Todolist";
-import {Space} from "antd";
+import {Space, Spin} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/strore";
 import {TaskType} from "../../redux/tasks_reducer";
@@ -33,17 +33,20 @@ const Todolists = React.memo(function () {
         <Space wrap align={'center'} size={'small'}>
             {
                 todolists.map(tl =>
-                    <Todolist
-                        key={tl.id}
-                        id={tl.id}
-                        title={tl.title}
-                        addedDate={tl.addedDate}
-                        order={tl.order}
-                        filter={tl.filter || 'all'}
-                        deleteTodolist={onDeleteTodolist}
-                        changeTodolistTitle={onChangeTodolistTitle}
-                        tasks={tasks.filter(t => t.todoListId === tl.id)}
-                    />)
+                    <Spin spinning={tl.loadingStatus === 'loading'}>
+                        <Todolist
+                            loadingStatus={tl.loadingStatus}
+                            key={tl.id}
+                            id={tl.id}
+                            title={tl.title}
+                            addedDate={tl.addedDate}
+                            order={tl.order}
+                            filter={tl.filter || 'all'}
+                            deleteTodolist={onDeleteTodolist}
+                            changeTodolistTitle={onChangeTodolistTitle}
+                            tasks={tasks.filter(t => t.todoListId === tl.id)}
+                        />
+                    </Spin>)
             }
         </Space>
     );

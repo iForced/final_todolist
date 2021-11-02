@@ -1,13 +1,14 @@
 import {Dispatch} from "redux";
 import {todolists_api} from "../api/todolists_api";
-import {setLoadingStatus} from "./app_reducer";
+import {LoadingStatusesType, setAppLoadingStatus} from "./app_reducer";
 
 enum TodolistActions {
-    SET_TODOLISTS = 'SET_TODOLISTS',
-    ADD_TODOLIST = 'ADD_TODOLIST',
-    DELETE_TODOLIST = 'DELETE_TODOLIST',
-    CHANGE_TODOLIST_TITLE = 'CHANGE_TODOLIST_TITLE',
-    CHANGE_TODOLIST_FILTER = 'CHANGE_TODOLIST_FILTER',
+    SET_TODOLISTS = 'TODOLIST/SET_TODOLISTS',
+    ADD_TODOLIST = 'TODOLIST/ADD_TODOLIST',
+    DELETE_TODOLIST = 'TODOLIST/DELETE_TODOLIST',
+    CHANGE_TODOLIST_TITLE = 'TODOLIST/CHANGE_TODOLIST_TITLE',
+    CHANGE_TODOLIST_FILTER = 'TODOLIST/CHANGE_TODOLIST_FILTER',
+    SET_LOADING_STATUS = 'TODOLIST/SET_LOADING_STATUS',
 }
 export type FilterValuesType = 'all' | 'active' | 'completed'
 export type TodolistType = {
@@ -16,6 +17,7 @@ export type TodolistType = {
     order: number
     title: string
     filter: FilterValuesType
+    loadingStatus?: LoadingStatusesType
 }
 type InitialStateType = Array<TodolistType>
 type ActionsType =
@@ -24,6 +26,7 @@ type ActionsType =
     | ReturnType<typeof deleteTodolist>
     | ReturnType<typeof changeTodolistTitle>
     | ReturnType<typeof changeTodolistFilter>
+    | ReturnType<typeof setTodolistLoadingStatus>
 
 const initialState: InitialStateType = []
 
@@ -44,6 +47,9 @@ export const todolist_reducer = (state: InitialStateType = initialState, action:
 
         case TodolistActions.CHANGE_TODOLIST_FILTER:
             return state.map(tl => tl.id === action.todolistId ? {...tl, filter: action.newFilter} : tl)
+
+        case TodolistActions.SET_LOADING_STATUS:
+            return state.map(tl => tl.id === action.todolistId ? {...tl, loadingStatus: action.newStatus} : tl)
 
         default:
             return state
@@ -82,6 +88,13 @@ export const changeTodolistFilter = (todolistId: string, newFilter: FilterValues
         newFilter,
     } as const
 }
+export const setTodolistLoadingStatus = (todolistId: string, newStatus: LoadingStatusesType) => {
+    return {
+        type: TodolistActions.SET_LOADING_STATUS,
+        todolistId,
+        newStatus,
+    } as const
+}
 export const getTodolistsThunk = () => (dispatch: Dispatch) => {
     todolists_api().getTodolists()
         .then(response => response.data)
@@ -90,34 +103,34 @@ export const getTodolistsThunk = () => (dispatch: Dispatch) => {
         })
 }
 export const createTodolistThunk = (title: string) => (dispatch: Dispatch) => {
-    dispatch(setLoadingStatus('loading'))
+    dispatch(setAppLoadingStatus('loading'))
     todolists_api().createTodolist(title)
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setLoadingStatus('success'))
+                dispatch(setAppLoadingStatus('success'))
                 dispatch(addTodolist(data.data.item))
             }
         })
 }
 export const deleteTodolistThunk = (todolistId: string) => (dispatch: Dispatch) => {
-    dispatch(setLoadingStatus('loading'))
+    dispatch(setAppLoadingStatus('loading'))
     todolists_api().deleteTodolist(todolistId)
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setLoadingStatus('success'))
+                dispatch(setAppLoadingStatus('success'))
                 dispatch(deleteTodolist(todolistId))
             }
         })
 }
 export const changeTodolistTitleThunk = (todolistId: string, title: string) => (dispatch: Dispatch) => {
-    dispatch(setLoadingStatus('loading'))
+    dispatch(setAppLoadingStatus('loading'))
     todolists_api().changeTodolistTitle(todolistId, title)
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setLoadingStatus('success'))
+                dispatch(setAppLoadingStatus('success'))
                 dispatch(changeTodolistTitle(todolistId, title))
             }
         })
