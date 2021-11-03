@@ -13,7 +13,8 @@ import {LoadingStatusesType} from "./redux/app_reducer";
 
 const {Header, Footer, Sider, Content} = Layout;
 
-const App = () => {
+const App = React.memo(function () {
+    console.log('app')
 
     const dispatch = useDispatch()
 
@@ -22,7 +23,7 @@ const App = () => {
 
     const onTodolistAdd = useCallback((title: string) => {
         dispatch(createTodolistThunk(title))
-    }, [dispatch])
+    }, [])
 
     return (
 
@@ -49,6 +50,6 @@ const App = () => {
             <Footer style={{textAlign: 'center'}}>Ilya Orsich | IT-Incubator</Footer>
         </Layout>
     );
-};
+})
 
 export default App;

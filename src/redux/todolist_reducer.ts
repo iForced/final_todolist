@@ -34,7 +34,7 @@ export const todolist_reducer = (state: InitialStateType = initialState, action:
     switch (action.type) {
 
         case TodolistActions.SET_TODOLISTS:
-            return [...state, ...action.todolists]
+            return [...action.todolists]
 
         case TodolistActions.ADD_TODOLIST:
             return [...state, action.todolist]
@@ -54,6 +54,15 @@ export const todolist_reducer = (state: InitialStateType = initialState, action:
         default:
             return state
     }
+}
+
+const onSuccessTodolistsRequest = (dispatch: Dispatch) => {
+    dispatch(setAppError(''))
+    dispatch(setAppLoadingStatus('success'))
+}
+const onFailedTodolistRequest = (dispatch: Dispatch, error: string) => {
+    dispatch(setAppError(error))
+    dispatch(setAppLoadingStatus('fail'))
 }
 
 export const setTodolists = (todolists: Array<TodolistType>) => {
@@ -101,6 +110,9 @@ export const getTodolistsThunk = () => (dispatch: Dispatch) => {
         .then(data => {
             dispatch(setTodolists(data))
         })
+        .catch(err => {
+            onFailedTodolistRequest(dispatch, err.message)
+        })
 }
 export const createTodolistThunk = (title: string) => (dispatch: Dispatch) => {
     dispatch(setAppLoadingStatus('loading'))
@@ -108,13 +120,14 @@ export const createTodolistThunk = (title: string) => (dispatch: Dispatch) => {
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setAppError(''))
-                dispatch(setAppLoadingStatus('success'))
+                onSuccessTodolistsRequest(dispatch)
                 dispatch(addTodolist(data.data.item))
             } else {
-                dispatch(setAppError(data.messages.join(',')))
-                dispatch(setAppLoadingStatus('fail'))
+                onFailedTodolistRequest(dispatch, data.messages.join(','))
             }
+        })
+        .catch(err => {
+            onFailedTodolistRequest(dispatch, err.message)
         })
 }
 export const deleteTodolistThunk = (todolistId: string) => (dispatch: Dispatch) => {
@@ -123,13 +136,14 @@ export const deleteTodolistThunk = (todolistId: string) => (dispatch: Dispatch) 
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setAppError(''))
-                dispatch(setAppLoadingStatus('success'))
+                onSuccessTodolistsRequest(dispatch)
                 dispatch(deleteTodolist(todolistId))
             } else {
-                dispatch(setAppError(data.messages.join(',')))
-                dispatch(setAppLoadingStatus('fail'))
+                onFailedTodolistRequest(dispatch, data.messages.join(','))
             }
+        })
+        .catch(err => {
+            onFailedTodolistRequest(dispatch, err.message)
         })
 }
 export const changeTodolistTitleThunk = (todolistId: string, title: string) => (dispatch: Dispatch) => {
@@ -138,12 +152,13 @@ export const changeTodolistTitleThunk = (todolistId: string, title: string) => (
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setAppError(''))
-                dispatch(setAppLoadingStatus('success'))
+                onSuccessTodolistsRequest(dispatch)
                 dispatch(changeTodolistTitle(todolistId, title))
             } else {
-                dispatch(setAppError(data.messages.join(',')))
-                dispatch(setAppLoadingStatus('fail'))
+                onFailedTodolistRequest(dispatch, data.messages.join(','))
             }
+        })
+        .catch(err => {
+            onFailedTodolistRequest(dispatch, err.message)
         })
 }

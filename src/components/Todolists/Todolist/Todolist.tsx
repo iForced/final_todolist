@@ -3,7 +3,7 @@ import s from './Todolist.module.css'
 import {changeTodolistFilter, FilterValuesType, TodolistType} from "../../../redux/todolist_reducer";
 import {Button, Card} from "antd";
 import {DeleteFilled} from "@ant-design/icons";
-import EditableTExtField from "../../EditableTextField/EditableTExtField";
+import EditableTextField from "../../EditableTextField/EditableTextField";
 import {
     updateTaskThunk,
     createTaskThunk,
@@ -24,31 +24,32 @@ type PropsType = TodolistType & {
 }
 
 const Todolist = React.memo(function (props: PropsType) {
+    console.log('todo', props.title)
 
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getTasksThunk(props.id))
-    }, [dispatch])
+    }, [])
 
     const onDeleteTodolist = useCallback(() => {
         props.deleteTodolist(props.id)
-    }, [dispatch])
+    }, [])
     const onChangeTodolistFilter = useCallback((newFilter: FilterValuesType) => {
         dispatch(changeTodolistFilter(props.id, newFilter))
-    }, [dispatch])
+    }, [])
     const onAddTask = useCallback((title: string) => {
         dispatch(createTaskThunk(props.id, title))
-    }, [dispatch])
+    }, [])
     const onDeleteTask = useCallback((taskId: string) => {
         dispatch(deleteTaskThunk(props.id, taskId))
-    }, [dispatch])
+    }, [])
     const onChangeTaskTitle = useCallback((taskId: string, newTitle: string) => {
         dispatch(updateTaskThunk(props.id, taskId, {title: newTitle}))
-    }, [dispatch])
+    }, [])
     const onChangeTaskStatus = useCallback((taskId: string, newStatus: TaskStatuses) => {
         dispatch(updateTaskThunk(props.id, taskId, {status: newStatus}))
-    }, [dispatch])
+    }, [])
 
     const tasksByFilterValue = props.tasks.filter(t => {
         switch (props.filter) {
@@ -68,7 +69,7 @@ const Todolist = React.memo(function (props: PropsType) {
         <Card
             className={s.todolists}
             style={{minWidth: '300px'}}
-            title={<EditableTExtField value={props.title} id={props.id} onValueChange={props.changeTodolistTitle}/>}
+            title={<EditableTextField value={props.title} id={props.id} onValueChange={props.changeTodolistTitle}/>}
             extra={<Button
                 shape={'circle'}
                 icon={<DeleteFilled style={{color: 'red'}}/>}

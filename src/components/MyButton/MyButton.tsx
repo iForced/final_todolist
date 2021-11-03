@@ -8,7 +8,7 @@ type PropsType = {
     changeFilter: (newFilter: FilterValuesType) => void
 }
 
-const MyButton = (props: PropsType) => {
+const MyButton = React.memo(function (props: PropsType) {
     return (
         <div>
             <Button
@@ -18,6 +18,6 @@ const MyButton = (props: PropsType) => {
             </Button>
         </div>
     );
-};
+})
 
 export default MyButton;

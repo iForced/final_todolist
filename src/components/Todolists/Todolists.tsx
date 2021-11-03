@@ -20,20 +20,20 @@ const Todolists = React.memo(function () {
 
     useEffect(() => {
         dispatch(getTodolistsThunk())
-    }, [dispatch])
+    }, [])
 
     const onDeleteTodolist = useCallback((todolistId: string) => {
         dispatch(deleteTodolistThunk(todolistId))
-    }, [dispatch])
+    }, [])
     const onChangeTodolistTitle = useCallback((todolistId: string, title: string) => {
         dispatch(changeTodolistTitleThunk(todolistId, title))
-    }, [dispatch])
+    }, [])
 
     return (
         <Space wrap align={'center'} size={'small'}>
             {
                 todolists.map(tl =>
-                    <Spin spinning={tl.loadingStatus === 'loading'}>
+                    <Spin key={tl.id} spinning={tl.loadingStatus === 'loading'}>
                         <Todolist
                             loadingStatus={tl.loadingStatus}
                             key={tl.id}

@@ -97,6 +97,9 @@ export const getTasksThunk = (todolistId: string) => (dispatch: Dispatch) => {
         .then(data => {
             dispatch(setTasks(todolistId, data.items))
         })
+        .catch(err => {
+            onFailedTasksRequest(dispatch, todolistId, err.message)
+        })
 }
 export const createTaskThunk = (todolistId: string, title: string) => (dispatch: Dispatch) => {
     dispatch(setTodolistLoadingStatus(todolistId, 'loading'))
@@ -110,6 +113,9 @@ export const createTaskThunk = (todolistId: string, title: string) => (dispatch:
                 onFailedTasksRequest(dispatch, todolistId, data.messages.join(','))
             }
         })
+        .catch(err => {
+            onFailedTasksRequest(dispatch, todolistId, err.message)
+        })
 }
 export const deleteTaskThunk = (todolistId: string, taskId: string) => (dispatch: Dispatch) => {
     dispatch(setTodolistLoadingStatus(todolistId, 'loading'))
@@ -122,6 +128,9 @@ export const deleteTaskThunk = (todolistId: string, taskId: string) => (dispatch
             } else {
                 onFailedTasksRequest(dispatch, todolistId, data.messages.join(','))
             }
+        })
+        .catch(err => {
+            onFailedTasksRequest(dispatch, todolistId, err.message)
         })
 }
 export type DataForUpdateDomainTaskType = {
@@ -152,5 +161,8 @@ export const updateTaskThunk = (todolistId: string, taskId: string, taskData: Da
             } else {
                 onFailedTasksRequest(dispatch, todolistId, data.messages.join(','))
             }
+        })
+        .catch(err => {
+            onFailedTasksRequest(dispatch, todolistId, err.message)
         })
 }
