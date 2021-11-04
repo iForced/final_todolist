@@ -11,22 +11,26 @@ import {
     getTasksThunk,
     TaskType
 } from "../../../redux/tasks_reducer";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import AddItemForm from "../../AddItemForm/AddItemForm";
 import Task from "../Task/Task";
 import {TaskStatuses} from "../../../api/tasks_api";
 import MyButton from "../../MyButton/MyButton";
+import {AppStateType} from "../../../redux/strore";
 
 type PropsType = TodolistType & {
     deleteTodolist: (todolistId: string) => void
     changeTodolistTitle: (todolistId: string, title: string) => void
-    tasks: Array<TaskType>
+    // tasks: Array<TaskType>
 }
 
 const Todolist = React.memo(function (props: PropsType) {
     console.log('todo', props.title)
 
     const dispatch = useDispatch()
+
+    // @ts-ignore
+    const tasks = useSelector<AppStateType, Array<TaskType>>(state => state.tasksReducer[props.id]) || []
 
     useEffect(() => {
         dispatch(getTasksThunk(props.id))
@@ -51,7 +55,7 @@ const Todolist = React.memo(function (props: PropsType) {
         dispatch(updateTaskThunk(props.id, taskId, {status: newStatus}))
     }, [])
 
-    const tasksByFilterValue = props.tasks.filter(t => {
+    const tasksByFilterValue = tasks.filter(t => {
         switch (props.filter) {
 
             case "active":
@@ -88,7 +92,7 @@ const Todolist = React.memo(function (props: PropsType) {
                         />)
                 }
             </div>
-            <div className={s.buttons + ' ' + (!props.tasks.length && s.hideButtons)}>
+            <div className={s.buttons + ' ' + (!tasks.length && s.hideButtons)}>
                 <MyButton name={'all'} filterValue={props.filter} changeFilter={onChangeTodolistFilter} />
                 <MyButton name={'active'} filterValue={props.filter} changeFilter={onChangeTodolistFilter} />
                 <MyButton name={'completed'} filterValue={props.filter} changeFilter={onChangeTodolistFilter} />

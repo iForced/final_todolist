@@ -4,7 +4,7 @@ import {AppStateType} from "./strore";
 import {setTodolistLoadingStatus} from "./todolist_reducer";
 import {setAppError} from "./app_reducer";
 
-enum TodolistActions {
+enum TasksActions {
     SET_TASKS = 'TASK/SET_TASKS',
     ADD_TASK = 'TASK/ADD_TASK',
     DELETE_TASK = 'TASK/DELETE_TASK',
@@ -24,29 +24,31 @@ export type TaskType = {
     addedDate: string
 }
 
-type InitialStateType = Array<TaskType>
+type InitialStateType = {
+    [key: string]: Array<TaskType>
+}
 type ActionsType =
     ReturnType<typeof setTasks>
     | ReturnType<typeof addTask>
     | ReturnType<typeof deleteTask>
     | ReturnType<typeof updateTask>
 
-const initialState: InitialStateType = []
+const initialState: InitialStateType = {}
 
 export const tasks_reducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
 
-        case TodolistActions.SET_TASKS:
-            return [...state, ...action.tasks]
+        case TasksActions.SET_TASKS:
+            return {...state, [action.todolistId]: [...action.tasks]}
 
-        case TodolistActions.ADD_TASK:
-            return [...state, action.task]
+        case TasksActions.ADD_TASK:
+            return {...state, [action.todolistId]: [...state[action.todolistId], action.task]}
 
-        case TodolistActions.DELETE_TASK:
-            return state.filter(t => t.id !== action.taskId)
+        case TasksActions.DELETE_TASK:
+            return {...state, [action.todolistId]: state[action.todolistId].filter(t => t.id !== action.taskId)}
 
-        case TodolistActions.UPDATE_TASK:
-            return state.map(t => t.todoListId === action.todolistId && t.id === action.taskId ? {...t, ...action.taskData} : t)
+        case TasksActions.UPDATE_TASK:
+            return {...state, [action.todolistId]: state[action.todolistId].map(t => t.id === action.taskId ? {...t, ...action.taskData} : t)}
 
         default:
             return state
@@ -64,28 +66,28 @@ const onFailedTasksRequest = (dispatch: Dispatch, todolistId: string, error: str
 
 export const setTasks = (todolistId: string, tasks: Array<TaskType>) => {
     return {
-        type: TodolistActions.SET_TASKS,
+        type: TasksActions.SET_TASKS,
         todolistId,
         tasks,
     } as const
 }
 export const addTask = (todolistId: string, task: TaskType) => {
     return {
-        type: TodolistActions.ADD_TASK,
+        type: TasksActions.ADD_TASK,
         todolistId,
         task,
     } as const
 }
 export const deleteTask = (todolistId: string, taskId: string) => {
     return {
-        type: TodolistActions.DELETE_TASK,
+        type: TasksActions.DELETE_TASK,
         todolistId,
         taskId,
     } as const
 }
 export const updateTask = (todolistId: string, taskId: string, taskData: DataForUpdateTaskType) => {
     return {
-        type: TodolistActions.UPDATE_TASK,
+        type: TasksActions.UPDATE_TASK,
         todolistId,
         taskId,
         taskData,
@@ -144,7 +146,7 @@ export type DataForUpdateDomainTaskType = {
 }
 export const updateTaskThunk = (todolistId: string, taskId: string, taskData: DataForUpdateDomainTaskType) => (dispatch: Dispatch, getState: () => AppStateType) => {
 
-    const task = getState().tasksReducer.find(t => t.todoListId === todolistId && t.id === taskId)
+    const task = getState().tasksReducer[todolistId].find(t => t.todoListId === todolistId && t.id === taskId)
 
     if (!task) return
 

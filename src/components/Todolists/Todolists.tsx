@@ -16,7 +16,6 @@ const Todolists = React.memo(function () {
 
     const dispatch = useDispatch()
     const todolists = useSelector<AppStateType, Array<TodolistType>>(state => state.todolistReducer)
-    const tasks = useSelector<AppStateType, Array<TaskType>>(state => state.tasksReducer)
 
     useEffect(() => {
         dispatch(getTodolistsThunk())
@@ -44,7 +43,7 @@ const Todolists = React.memo(function () {
                             filter={tl.filter || 'all'}
                             deleteTodolist={onDeleteTodolist}
                             changeTodolistTitle={onChangeTodolistTitle}
-                            tasks={tasks.filter(t => t.todoListId === tl.id)}
+                            // tasks={tasks.filter(t => t.todoListId === tl.id)}
                         />
                     </Spin>)
             }
