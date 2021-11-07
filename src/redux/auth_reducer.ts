@@ -1,6 +1,5 @@
 import {Dispatch} from "redux";
 import {auth_api} from "../api/auth_api";
-import {setAppError} from "./app_reducer";
 import {onFailedRequest, onSuccessRequest} from "./todolist_reducer";
 
 enum AuthActions {
@@ -51,7 +50,6 @@ export const loginThunk = (email: string, password: string, rememberMe: boolean)
     auth_api().login({email, password, rememberMe})
         .then(response => response.data)
         .then(data => {
-            debugger
             if (data.resultCode === 0) {
                 dispatch(login(data.userId))
                 onSuccessRequest(dispatch)

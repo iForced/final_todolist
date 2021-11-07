@@ -2,12 +2,15 @@ import React from 'react';
 import s from './Login.module.css'
 import {useFormik} from "formik";
 import {Button, Checkbox, Input, Space} from "antd";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {loginThunk} from "../../redux/auth_reducer";
+import {AppStateType} from "../../redux/strore";
+import {Navigate, useNavigate} from 'react-router-dom';
 
 const Login = () => {
 
     const dispatch = useDispatch()
+    const isLogged = useSelector<AppStateType, boolean>(state => state.authReducer.isLogged)
 
     const formik = useFormik({
         initialValues: {
@@ -19,6 +22,11 @@ const Login = () => {
             dispatch(loginThunk(data.email, data.password, data.rememberMe))
         }
     })
+
+    const navigate = useNavigate()
+    if (isLogged) {
+        navigate('/')
+    }
 
     return (
         <div className={s.formWrapper}>

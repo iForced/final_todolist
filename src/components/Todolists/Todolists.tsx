@@ -10,11 +10,13 @@ import Todolist from "./Todolist/Todolist";
 import {Space, Spin} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/strore";
+import {useNavigate} from "react-router-dom";
 
 const Todolists = React.memo(function () {
 
     const dispatch = useDispatch()
     const todolists = useSelector<AppStateType, Array<TodolistType>>(state => state.todolistReducer)
+    const isLogged = useSelector<AppStateType, boolean>(state => state.authReducer.isLogged)
 
     useEffect(() => {
         dispatch(getTodolistsThunk())
@@ -26,6 +28,11 @@ const Todolists = React.memo(function () {
     const onChangeTodolistTitle = useCallback((todolistId: string, title: string) => {
         dispatch(changeTodolistTitleThunk(todolistId, title))
     }, [])
+
+    const navigate = useNavigate()
+    if (!isLogged) {
+        navigate('/login')
+    }
 
     return (
         <Space wrap align={'center'} size={'small'}>
