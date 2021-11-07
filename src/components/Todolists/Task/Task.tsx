@@ -14,7 +14,6 @@ type PropsType = {
 }
 
 const Task = React.memo(function (props: PropsType) {
-    console.log('task', props.taskData.title)
 
     const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const newStatus = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New

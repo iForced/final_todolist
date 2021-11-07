@@ -10,7 +10,6 @@ import Todolist from "./Todolist/Todolist";
 import {Space, Spin} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/strore";
-import {TaskType} from "../../redux/tasks_reducer";
 
 const Todolists = React.memo(function () {
 
@@ -43,7 +42,6 @@ const Todolists = React.memo(function () {
                             filter={tl.filter || 'all'}
                             deleteTodolist={onDeleteTodolist}
                             changeTodolistTitle={onChangeTodolistTitle}
-                            // tasks={tasks.filter(t => t.todoListId === tl.id)}
                         />
                     </Spin>)
             }

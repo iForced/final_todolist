@@ -21,7 +21,6 @@ import {AppStateType} from "../../../redux/strore";
 type PropsType = TodolistType & {
     deleteTodolist: (todolistId: string) => void
     changeTodolistTitle: (todolistId: string, title: string) => void
-    // tasks: Array<TaskType>
 }
 
 const Todolist = React.memo(function (props: PropsType) {
@@ -29,7 +28,6 @@ const Todolist = React.memo(function (props: PropsType) {
 
     const dispatch = useDispatch()
 
-    // @ts-ignore
     const tasks = useSelector<AppStateType, Array<TaskType>>(state => state.tasksReducer[props.id]) || []
 
     useEffect(() => {
