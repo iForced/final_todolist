@@ -1,0 +1,11 @@
+.preloginText {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+}

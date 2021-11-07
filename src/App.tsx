@@ -10,6 +10,7 @@ import {Alert, Layout, Spin} from "antd";
 import AddItemForm from "./components/AddItemForm/AddItemForm";
 import {AppStateType} from "./redux/strore";
 import {LoadingStatusesType} from "./redux/app_reducer";
+import Login from "./components/Login/Login";
 
 const {Header, Footer, Sider, Content} = Layout;
 
@@ -39,12 +40,13 @@ const App = React.memo(function () {
             />}
             <Spin spinning={appLoadingStatus === 'loading'}>
                 <Layout className={s.main}>
-                    <Sider theme={'light'} className={s.sideBar} width={'300px'}>
-                        <AddItemForm onAddItem={onTodolistAdd} formDisabled={appLoadingStatus === 'loading'}/>
-                    </Sider>
-                    <Content className={s.mainContent}>
-                        <Todolists />
-                    </Content>
+                    <Login />
+                    {/*<Sider theme={'light'} className={s.sideBar} width={'300px'}>*/}
+                    {/*    <AddItemForm onAddItem={onTodolistAdd} formDisabled={appLoadingStatus === 'loading'}/>*/}
+                    {/*</Sider>*/}
+                    {/*<Content className={s.mainContent}>*/}
+                    {/*    <Todolists />*/}
+                    {/*</Content>*/}
                 </Layout>
             </Spin>
             <Footer style={{textAlign: 'center'}}>Ilya Orsich | IT-Incubator</Footer>
