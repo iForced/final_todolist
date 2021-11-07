@@ -5,7 +5,7 @@ import {Button, Checkbox, Input, Space} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {loginThunk} from "../../redux/auth_reducer";
 import {AppStateType} from "../../redux/strore";
-import {Navigate, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 const Login = () => {
 

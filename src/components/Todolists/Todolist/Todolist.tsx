@@ -24,7 +24,6 @@ type PropsType = TodolistType & {
 }
 
 const Todolist = React.memo(function (props: PropsType) {
-    console.log('todo', props.title)
 
     const dispatch = useDispatch()
 

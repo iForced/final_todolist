@@ -2,7 +2,7 @@
     color: white;
 }
 .main {
-    min-height: 100vh;
+    min-height: calc(100vh - 134px);
 }
 .sideBar {
     padding: 30px;

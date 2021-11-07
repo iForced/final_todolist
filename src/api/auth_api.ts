@@ -29,6 +29,9 @@ export const auth_api = () => {
         },
         logout() {
             return axiosInstance.delete<CommonResponseType>(`/auth/login`)
+        },
+        me() {
+            return axiosInstance.get<CommonResponseType<{id: number, email: string, login: string}>>(`/auth/me`)
         }
     }
 }

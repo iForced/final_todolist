@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import 'antd/dist/antd.css';
 import s from './App.module.css'
 import Todolists from "./components/Todolists/Todolists";
@@ -10,21 +10,30 @@ import {AppStateType} from "./redux/strore";
 import {LoadingStatusesType} from "./redux/app_reducer";
 import Login from "./components/Login/Login";
 import {Route, Routes} from "react-router-dom";
+import {initializeThunk} from "./redux/auth_reducer";
 
 const {Header, Footer, Sider, Content} = Layout;
 
 const App = React.memo(function () {
-    console.log('app')
 
     const dispatch = useDispatch()
 
     const appLoadingStatus = useSelector<AppStateType, LoadingStatusesType>(state => state.appReducer.loadingStatus)
     const appError = useSelector<AppStateType, string>(state => state.appReducer.error)
     const isLogged = useSelector<AppStateType, boolean>(state => state.authReducer.isLogged)
+    const isInitialized = useSelector<AppStateType, boolean>(state => state.authReducer.isInitialized)
+
+    useEffect(() => {
+        dispatch(initializeThunk())
+    }, [])
 
     const onTodolistAdd = useCallback((title: string) => {
         dispatch(createTodolistThunk(title))
     }, [])
+
+    if (!isInitialized) {
+        return <Spin />
+    }
 
     return (
 
