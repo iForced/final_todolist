@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import s from './Login.module.css'
 import {useFormik} from "formik";
 import {Button, Checkbox, Input, Space} from "antd";
@@ -11,6 +11,13 @@ const Login = () => {
 
     const dispatch = useDispatch()
     const isLogged = useSelector<AppStateType, boolean>(state => state.authReducer.isLogged)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (isLogged) {
+            navigate('/')
+        }
+    }, [isLogged])
 
     const formik = useFormik({
         initialValues: {
@@ -22,11 +29,6 @@ const Login = () => {
             dispatch(loginThunk(data.email, data.password, data.rememberMe))
         }
     })
-
-    const navigate = useNavigate()
-    if (isLogged) {
-        navigate('/')
-    }
 
     return (
         <div className={s.formWrapper}>
@@ -43,6 +45,7 @@ const Login = () => {
                     />
                     <Checkbox
                         {...formik.getFieldProps('rememberMe')}
+                        checked={formik.values.rememberMe}
                     >Remember me
                     </Checkbox>
                     <Button htmlType={'submit'} type={'primary'}>Log in</Button>

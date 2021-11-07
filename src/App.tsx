@@ -4,13 +4,13 @@ import s from './App.module.css'
 import Todolists from "./components/Todolists/Todolists";
 import {createTodolistThunk} from "./redux/todolist_reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {Alert, Layout, Spin} from "antd";
+import {Alert, Button, Layout, Spin} from "antd";
 import AddItemForm from "./components/AddItemForm/AddItemForm";
 import {AppStateType} from "./redux/strore";
 import {LoadingStatusesType} from "./redux/app_reducer";
 import Login from "./components/Login/Login";
 import {Route, Routes} from "react-router-dom";
-import {initializeThunk} from "./redux/auth_reducer";
+import {initializeThunk, logoutThunk} from "./redux/auth_reducer";
 
 const {Header, Footer, Sider, Content} = Layout;
 
@@ -30,6 +30,9 @@ const App = React.memo(function () {
     const onTodolistAdd = useCallback((title: string) => {
         dispatch(createTodolistThunk(title))
     }, [])
+    const onLogout = () => {
+        dispatch(logoutThunk())
+    }
 
     if (!isInitialized) {
         return <Spin />
@@ -38,8 +41,10 @@ const App = React.memo(function () {
     return (
 
         <Layout>
-            <Header>
+            <Header className={s.header}>
                 <h1 className={s.headerTitle}>Todo List</h1>
+                {isLogged &&
+                <Button onClick={onLogout}>Log out</Button>}
             </Header>
             {appError &&
             <Alert
@@ -62,7 +67,7 @@ const App = React.memo(function () {
                     </Content>
                 </Layout>
             </Spin>
-            <Footer style={{textAlign: 'center'}}>Ilya Orsich | IT-Incubator</Footer>
+            <Footer style={{textAlign: 'center', backgroundColor: '#001529', color: 'white'}}>Ilya Orsich | IT-Incubator</Footer>
         </Layout>
     );
 })

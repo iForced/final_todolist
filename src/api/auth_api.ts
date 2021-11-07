@@ -4,7 +4,6 @@ type CommonResponseType<T = {}> = {
     resultCode: number
     messages: Array<string>
     data: T
-    userId: number
 }
 
 export type AuthDataType = {

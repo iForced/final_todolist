@@ -15,12 +15,18 @@ import {useNavigate} from "react-router-dom";
 const Todolists = React.memo(function () {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const todolists = useSelector<AppStateType, Array<TodolistType>>(state => state.todolistReducer)
     const isLogged = useSelector<AppStateType, boolean>(state => state.authReducer.isLogged)
 
     useEffect(() => {
         dispatch(getTodolistsThunk())
     }, [])
+    useEffect(() => {
+        if (!isLogged) {
+            navigate('/login')
+        }
+    }, [isLogged])
 
     const onDeleteTodolist = useCallback((todolistId: string) => {
         dispatch(deleteTodolistThunk(todolistId))
@@ -28,11 +34,6 @@ const Todolists = React.memo(function () {
     const onChangeTodolistTitle = useCallback((todolistId: string, title: string) => {
         dispatch(changeTodolistTitleThunk(todolistId, title))
     }, [])
-
-    const navigate = useNavigate()
-    if (!isLogged) {
-        navigate('/login')
-    }
 
     return (
         <Space wrap align={'center'} size={'small'}>

@@ -1,7 +1,7 @@
 import {Dispatch} from "redux";
 import {auth_api} from "../api/auth_api";
 import {onFailedRequest, onSuccessRequest} from "./todolist_reducer";
-import {setAppLoadingStatus} from "./app_reducer";
+import {setAppError, setAppLoadingStatus} from "./app_reducer";
 
 enum AuthActions {
     LOGIN = 'AUTH/LOGIN',
@@ -35,7 +35,7 @@ export const auth_reducer = (state: InitialStateType = initialState, action: Act
             return {...state, isLogged: false, userId: null}
 
         case AuthActions.INITIALIZE:
-            return {...state, isLogged: true, isInitialized: true}
+            return {...state, isInitialized: true}
 
         default:
             return state
@@ -65,7 +65,23 @@ export const loginThunk = (email: string, password: string, rememberMe: boolean)
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(login(data.userId))
+                dispatch(login(data.data.userId))
+                onSuccessRequest(dispatch)
+            } else {
+                onFailedRequest(dispatch, data.messages.join(','))
+            }
+        })
+        .catch(err => {
+            onFailedRequest(dispatch, err.message)
+        })
+}
+export const logoutThunk = () => (dispatch: Dispatch) => {
+    dispatch(setAppLoadingStatus('loading'))
+    auth_api().logout()
+        .then(response => response.data)
+        .then(data => {
+            if (data.resultCode === 0) {
+                dispatch(logout())
                 onSuccessRequest(dispatch)
             } else {
                 onFailedRequest(dispatch, data.messages.join(','))
@@ -81,11 +97,13 @@ export const initializeThunk = () => (dispatch: Dispatch) => {
         .then(response => response.data)
         .then(data => {
             if (data.resultCode === 0) {
-                dispatch(setInitialized())
+                dispatch(login(data.data.id))
                 onSuccessRequest(dispatch)
             } else {
                 onFailedRequest(dispatch, data.messages.join(','))
+                dispatch(setAppError(''))
             }
+            dispatch(setInitialized())
         })
         .catch(err => {
             onFailedRequest(dispatch, err.message)
